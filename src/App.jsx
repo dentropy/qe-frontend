@@ -4,6 +4,20 @@ import './App.css'
 
 function App() {
   const [NIP07, setNIP07] = useState(false)
+  const [NSEC, setNSEC] = useState('nsec....');
+  const nsec_invalid_string = "NSEC is Invalid"
+  const [NSECValid, setNSECValid] = useState(nsec_invalid_string);
+
+  function validate_NSEC(event){
+    setNSEC(event.target.value)
+    if(event.target.value.length == 63){
+      setNSECValid("NSEC is Valid please select Submit below")
+    }
+    else {
+      setNSECValid(nsec_invalid_string)
+    }
+  }
+
   react.useEffect(() =>{
     if(Object.keys(window).includes("nostr")){
       setNIP07(true)
@@ -19,7 +33,15 @@ function App() {
   }
   return (
     <>
-      <h1>NIP07 is not enabled get your NSEC ready</h1>
+      <h1>Input your NSEC below or install a nostr NIP07 extension</h1>
+      <h1>{NSECValid}</h1>
+      <input 
+        type="text"
+        value={NSEC} 
+        onChange={validate_NSEC} 
+        placeholder="Type here..."
+      >
+      </input>
     </>
   )
 }
