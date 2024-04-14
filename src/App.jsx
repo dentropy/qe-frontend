@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import { ConnectNostr } from './stories/ConnectNostr';
 import { WelcomePage } from './stories/WelcomePage';
+import { CouponAccountSetup } from './stories/CouponAccountSetup';
+
 // import './App.css'
 
 function App() {
@@ -35,7 +37,7 @@ function App() {
     },
     {
       path: "/coupon",
-      element: <div>Redeem Coupon Goes Here</div>,
+      element: <CouponAccountSetup></CouponAccountSetup>,
     },
     {
       path: "/profile",
