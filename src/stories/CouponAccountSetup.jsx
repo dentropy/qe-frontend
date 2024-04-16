@@ -2,9 +2,9 @@ import * as react from 'react'
 import { generateSecretKey, getPublicKey } from 'nostr-tools'
 import { finalizeEvent } from 'nostr-tools';
 
-export const CouponAccountSetup =({ ...props }) => {
+export const CouponAccountSetup =( props ) => {
 
-
+    
     const [appConfig, setAppConfig] = react.useState('');
     const [couponInput, setCouponInput] = react.useState('');
     const [tmpNostrSecretKey, setTmpNostrSecretKey] = react.useState('');
@@ -26,6 +26,7 @@ export const CouponAccountSetup =({ ...props }) => {
 
 
     async function check_coupon(){
+        console.log(Object.keys(props))
         let signedEvent = finalizeEvent({
             kind: 1,
             created_at: Math.floor(Date.now() / 1000),
@@ -54,6 +55,11 @@ export const CouponAccountSetup =({ ...props }) => {
         fetch_response = await fetch_response.json()
         console.log(fetch_response)
         setCouponValid(fetch_response)
+        if(fetch_response.status == "error"){
+            props.setSelectedModal("ModalInvalidCoupon")
+        } else {
+            props.setSelectedModal("ModalValidCoupon")
+        }
     }
 
     return(

@@ -8,10 +8,11 @@ import { ConnectNostr } from './stories/ConnectNostr';
 import { WelcomePage } from './stories/WelcomePage';
 import { CouponAccountSetup } from './stories/CouponAccountSetup';
 
+import { RenderModals } from './stories/RenderModals';
 // import './App.css'
 
 function App() {
-
+  const [selectedModal, setSelectedModal] = react.useState("NONE")
   const [nip07Status, setNip07Status] = react.useState(false)
 
   react.useEffect(() =>{
@@ -19,6 +20,8 @@ function App() {
       setNip07Status(true)
     }
   }, [])
+
+
 
   const router = createBrowserRouter([
     {
@@ -31,13 +34,19 @@ function App() {
       element: 
         <div>
           <ConnectNostr
-            nip07Status={nip07Status}>
+            nip07Status={nip07Status}
+            setSelectedModal={setSelectedModal}
+          >
           </ConnectNostr>
         </div>
     },
     {
       path: "/coupon",
-      element: <CouponAccountSetup></CouponAccountSetup>,
+      element: 
+        <CouponAccountSetup
+          setSelectedModal={setSelectedModal}
+          >
+        </CouponAccountSetup>,
     },
     {
       path: "/profile",
@@ -53,8 +62,12 @@ function App() {
     },
   ]);
   return (
-    <>
-     <RouterProvider router={router} />
+    <>  
+        <RenderModals
+          modalSelected={selectedModal}
+          setSelectedModal={setSelectedModal}
+        >  </RenderModals>
+        <RouterProvider router={router} />
     </>
   );
 }
