@@ -8,7 +8,7 @@ export function RenderModals(props) {
     const [modal, setModal] = React.useState(<></>);
 
     React.useEffect(() => {
-        renderModal(props.modalSelected)
+        renderModal(props.modalSelected.modal_selected)
     }, [props])
 
     function renderModal(modalSelected) {

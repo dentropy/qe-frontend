@@ -30,7 +30,10 @@ export function ModalExample(props) {
     
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
-        props.setSelectedModal("NONE")
+        props.setSelectedModal({
+            modal_selected : "NONE",
+            data : {}
+        })
         setOpen(false)
     }
     return (

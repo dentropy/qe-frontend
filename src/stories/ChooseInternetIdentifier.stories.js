@@ -2,11 +2,11 @@ import { fn } from '@storybook/test';
 import { userEvent, within, expect } from '@storybook/test';
 
 
-import { RenderModals } from './RenderModals';
+import { ChooseInternetIdentifier } from './ChooseInternetIdentifier';
 
 export default {
-    title: 'RenderModals',
-    component: RenderModals,
+    title: 'ChooseInternetIdentifier',
+    component: ChooseInternetIdentifier,
     parameters: {
         // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
         layout: 'centered',
@@ -20,38 +20,8 @@ export default {
     args: { onClick: fn() },
 };
 
-export const Example = {
+export const choose_internet_identifier = {
     args: {
-        primary: true,
-        modalSelected: {
-            "modal_selected": "ModalExample"
-        }
-    },
-};
-
-export const ModalInvalidCoupon = {
-    args: {
-        primary: true,
-        modalSelected: {
-            "modal_selected": "ModalInvalidCoupon"
-        }
-    },
-};
-
-export const ModalValidCoupon = {
-    args: {
-        primary: true,
-        modalSelected: {
-            "modal_selected": "ModalValidCoupon"
-        }
-    },
-};
-
-export const None = {
-    args: {
-        primary: true,
-        modalSelected: {
-            "modal_selected": "None"
-        }
+        primary: true
     },
 };
