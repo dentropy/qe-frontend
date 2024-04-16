@@ -3,6 +3,7 @@ import { generateSecretKey, getPublicKey } from 'nostr-tools'
 import { finalizeEvent } from 'nostr-tools';
 
 import { CouponInputAndCheck } from './CouponInputAndCheck'
+import { ChooseInternetIdentifier } from './ChooseInternetIdentifier';
 
 export const CouponAccountSetup = (props) => {
 
@@ -13,6 +14,7 @@ export const CouponAccountSetup = (props) => {
     const [tmpNostrPublicKey, setTmpNostrPublicKey] = react.useState('');
     const [couponValid, setCouponValid] = react.useState({});
     const [validCouponDomains, setValidCouponDomains] = react.useState({});
+    const [couponStep, setCouponStep] = react.useState("input_coupon");
 
     react.useEffect(() => {
         let secret_key = generateSecretKey()
@@ -93,18 +95,41 @@ export const CouponAccountSetup = (props) => {
         fetch_response = await fetch_response.json()
         console.log(check_coupon_domains)
         console.log(fetch_response)
-        setValidCouponDomains(fetch_response)
+        let internet_identifier_lables = []
+        for(var i = 0; i < fetch_response.data.length; i++){
+            internet_identifier_lables.push({
+                label : fetch_response.data[i]
+            })
+        }
+        console.log(internet_identifier_lables)
+        setValidCouponDomains(internet_identifier_lables)
+        setCouponStep("select_intenret_identifier")
+    }
+
+    function render_coupon_step(){
+        if (couponStep == "input_coupon") {
+            return (
+                <CouponInputAndCheck
+                    check_coupon={check_coupon}
+                    setCouponInput={setCouponInput}
+                    couponInput={couponInput}
+                    setCouponStep={setCouponStep}
+                >
+                </CouponInputAndCheck>
+            )
+        }
+        if (couponStep == "select_intenret_identifier") {
+            return (
+                <ChooseInternetIdentifier
+                    internet_identifier_lables={validCouponDomains}
+                ></ChooseInternetIdentifier>
+            )
+        }
     }
 
     return (
         <>
-            <CouponInputAndCheck
-                check_coupon={check_coupon}
-                setCouponInput={setCouponInput}
-                couponInput={couponInput}
-            >
-
-            </CouponInputAndCheck>
+            {render_coupon_step()}
         </>
     )
 }

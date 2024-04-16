@@ -6,14 +6,18 @@ import Typography from '@mui/material/Typography';
 
 export function ChooseInternetIdentifier(props) {
     const [username, setUsername] = React.useState("");
-    const [domainNames, setDomainNames] = React.useState([
-        { label: 'The Shawshank Redemption', year: 1994 },
-        { label: 'The Godfather', year: 1972 },
-        { label: 'The Godfather: Part II', year: 1974 },
-        { label: 'The Dark Knight', year: 2008 }
-    ])
+    const [domainNames, setDomainNames] = React.useState(
+        props.internet_identifier_lables
+        // [
+        // { label: 'The Shawshank Redemption', year: 1994 },
+        // { label: 'The Godfather', year: 1972 },
+        // { label: 'The Godfather: Part II', year: 1974 },
+        // { label: 'The Dark Knight', year: 2008 }
+        // ]
+    )
     const [ selectedDomainName, setSelectedDomainName ] = React.useState(
-        { label: 'The Shawshank Redemption', year: 1994 }
+        props.internet_identifier_lables[0]
+        // { label: 'The Shawshank Redemption', year: 1994 }
     )
 
     function set_domain_name(input, value) {
