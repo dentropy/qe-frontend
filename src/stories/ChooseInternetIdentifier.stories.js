@@ -22,6 +22,11 @@ export default {
 
 export const choose_internet_identifier = {
     args: {
-        primary: true
+        primary: true,
+        internet_identifier_lables : [
+            { label : "ddaemon.org"},
+            { label : "test.com"},
+            { label : "example.com"}
+        ]
     },
 };

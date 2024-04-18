@@ -16,6 +16,18 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         // rewrite: path => path.replace(/^\/api/, '')
+      },
+      '/dd': {
+        target: 'http://localhost:8081/',
+        changeOrigin: true,
+        secure: false,
+        // rewrite: path => path.replace(/^\/api/, '')
+      },
+      '/.well-known': {
+        target: 'http://localhost:8081/',
+        changeOrigin: true,
+        secure: false,
+        // rewrite: path => path.replace(/^\/api/, '')
       }
     }
   },
