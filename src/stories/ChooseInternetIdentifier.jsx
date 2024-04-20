@@ -43,7 +43,7 @@ export function ChooseInternetIdentifier(props) {
 
         console.log("token_id")
         console.log(props.coupon_token_id)
-        
+
 
         let nostr_json = await fetch(`/dd/${selectedDomainName.label}/.well-known/nostr.json`)
         nostr_json = await nostr_json.json()
@@ -61,7 +61,7 @@ export function ChooseInternetIdentifier(props) {
             app_config = await app_config.json()
             let my_DID = "did:key:" + await bs58.encode(await text_encoder.encode(String(public_key)))
             console.log(`my_DID = ${my_DID}`)
-            setMyDID( my_DID )
+            setMyDID(my_DID)
             let signedEvent = finalizeEvent({
                 kind: 1,
                 created_at: Math.floor(Date.now() / 1000),
@@ -76,7 +76,7 @@ export function ChooseInternetIdentifier(props) {
                         "body": {
                             "selector": {
                                 // "content.token_id": props.coupon_token_id, // TODO
-                                "content.did" : my_DID  // { $eq : my_DID }
+                                "content.did": my_DID  // { $eq : my_DID }
                             }
                         }
                     }),
@@ -107,7 +107,7 @@ export function ChooseInternetIdentifier(props) {
                         "app_key": app_config.app_key,
                         "function_name": "get_dd_token_state",
                         "body": {
-                            token_id : props.coupon_token_id
+                            token_id: props.coupon_token_id
                         }
                     }),
             }, secret_key)
@@ -135,7 +135,7 @@ export function ChooseInternetIdentifier(props) {
                 "value": 1,
                 "did_nonce": did_balance[0].content.nonce + 1,
                 "token_nonce": token_state[0].content.token_transaction_count,
-                "memo": JSON.stringify({ internet_identifier: username + "@"  }),
+                "memo": JSON.stringify({ internet_identifier: username + "@" + selectedDomainName.label}),
                 "operation_data": {}
             }
             console.log("transaction_body")
@@ -164,6 +164,92 @@ export function ChooseInternetIdentifier(props) {
             let transaction_response = await fetch_response.json()
             console.log("transaction_response")
             console.log(transaction_response)
+            signedEvent = finalizeEvent({
+                kind: 1,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: [
+                    ['DD']
+                ],
+                content:
+                    JSON.stringify({
+                        "function_name": "generate_nostr_dot_json",
+                        "app_name": app_config.app_name,
+                        "app_key": app_config.app_key,
+                        "body": {
+                            "domain_name": "ddaemon.org"
+                        }
+                    }),
+            }, secret_key)
+            fetch_response = await fetch("/napi", {
+                "method": "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signedEvent)
+            })
+            let nostr_json = await fetch_response.json()
+            console.log("nostr_json")
+            console.log(nostr_json)
+            console.log(nostr_json.query_check.CID)
+
+
+            // claim_internet_identifier
+            signedEvent = finalizeEvent({
+                kind: 1,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: [
+                    ['DD']
+                ],
+                content:
+                    JSON.stringify({
+                        "function_name": "claim_internet_identifier",
+                        "app_name": app_config.app_name,
+                        "app_key": app_config.app_key,
+                        "body": {
+                                "transaction_CID": nostr_json.query_check.CID
+                        }
+                    }),
+            }, secret_key)
+            fetch_response = await fetch("/napi", {
+                "method": "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signedEvent)
+            })
+            let claim_internet_identifier = await fetch_response.json()
+            console.log("claim_internet_identifier")
+            console.log(claim_internet_identifier)
+
+            // Set Relay List
+            signedEvent = finalizeEvent({
+                kind: 1,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: [
+                    ['DD']
+                ],
+                content:
+                    JSON.stringify({
+                        "function_name": "upsert_nip05",
+                        "app_name": app_config.app_name,
+                        "app_key": app_config.app_key,
+                        "body": {
+                                "internet_identifier": username + "@" + selectedDomainName.label,
+                                "public_key": public_key,
+                                "relay_list": ["ws://ddaemon.org", "wss://nostr.net"]
+                        }
+                    }),
+            }, secret_key)
+            fetch_response = await fetch("/napi", {
+                "method": "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(signedEvent)
+            })
+            let relay_set = await fetch_response.json()
+            console.log("relay_set")
+            console.log(relay_set)
 
 
         } else {
